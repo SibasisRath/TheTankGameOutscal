@@ -1,2 +1,2 @@
-# TheTankGameOutscal
-In this project I will work on a MVC pattern
+# CharacterSelection
+This is the project which demonstrates how character selection works in actual games.
