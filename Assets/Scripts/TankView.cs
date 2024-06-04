@@ -10,6 +10,7 @@ public class TankView : MonoBehaviour
     private float rotation;
 
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private MeshRenderer[] children;
 
     // Start is called before the first frame update
     void Start()
@@ -48,5 +49,13 @@ public class TankView : MonoBehaviour
     public Rigidbody GetRigidbody()
     {
     return rb;
+    }
+
+    public void ChangeMaterials(Material color)
+    {
+        foreach (MeshRenderer child in  children)
+        {
+            child.material = color;
+        }
     }
 }
