@@ -1,6 +1,6 @@
 ﻿public enum TankTypes 
 {
-    GreenTanks,
-    RedTanks,
-    BlueTanks
+    GreenTank,
+    RedTank,
+    BlueTank
 }
