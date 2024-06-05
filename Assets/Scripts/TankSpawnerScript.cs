@@ -20,12 +20,29 @@ public class TankSpawnerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CreateTank();
+
     }
 
-    private void CreateTank()
+    public void CreateTank(TankTypes tankType)
     {
-        TankModel tankModel = new TankModel(tanks[0].movementSpeed, tanks[0].rotationSpeed, tanks[0].type, tanks[0].color);
-        TankController tankController = new TankController(tankModel, tankView);
+        if (tankType == TankTypes.BlueTank)
+        {
+            TankModel tankModel = new TankModel(tanks[2].movementSpeed, tanks[2].rotationSpeed, tanks[2].type, tanks[2].color);
+            TankController tankController = new TankController(tankModel, tankView);
+        }
+
+        else if (tankType == TankTypes.RedTank)
+        {
+            TankModel tankModel = new TankModel(tanks[1].movementSpeed, tanks[1].rotationSpeed, tanks[1].type, tanks[1].color);
+            TankController tankController = new TankController(tankModel, tankView);
+        }
+
+        else if (tankType == TankTypes.GreenTank)
+        {
+            TankModel tankModel = new TankModel(tanks[0].movementSpeed, tanks[0].rotationSpeed, tanks[0].type, tanks[0].color);
+            TankController tankController = new TankController(tankModel, tankView);
+        }
+
+
     }
 }
