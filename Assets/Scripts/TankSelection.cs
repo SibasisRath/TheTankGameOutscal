@@ -5,18 +5,19 @@ using UnityEngine;
 public class TankSelection : MonoBehaviour
 {
     [SerializeField] private TankSpawnerScript TankSpawnerScript;
-    public void BlueTankSelected()
+    public void OnBlueTankSelected()
     {
-        Debug.Log("blue tank selected.");
         TankSpawnerScript.CreateTank(TankTypes.BlueTank);
         this.gameObject.SetActive(false);
     }
-    public void GreenTankSelected()
+
+    public void OnGreenTankSelected()
     {
         TankSpawnerScript.CreateTank(TankTypes.GreenTank);
         this.gameObject.SetActive(false);
     }
-    public void RedTankSelected()
+
+    public void OnRedTankSelected()
     {
         TankSpawnerScript.CreateTank(TankTypes.RedTank);
         this.gameObject.SetActive(false);
