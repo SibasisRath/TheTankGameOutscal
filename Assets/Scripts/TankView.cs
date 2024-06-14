@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class TankView : MonoBehaviour
@@ -12,12 +13,39 @@ public class TankView : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private MeshRenderer[] children;
 
+    private Vector3 tagetCameraPosition;
+    private Quaternion tagetCameraRotation;
+    private const float transitionDuration = 2f;
+
     // Start is called before the first frame update
     void Start()
     {
-        GameObject cam = GameObject.Find("Main Camera");   
+        StartCoroutine(LerpCameraPositionAndRotation());
+    }
+
+    IEnumerator LerpCameraPositionAndRotation()
+    {
+        GameObject cam = GameObject.Find("Main Camera");
         cam.transform.SetParent(transform);
-        cam.transform.position = new Vector3(0,3,-4);
+        tagetCameraPosition = new Vector3(0, 15, -10);
+        tagetCameraRotation = Quaternion.Euler(50, 0, 0);
+        Vector3 startPosition = cam.transform.position;
+        Quaternion startRotation = cam.transform.rotation;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < transitionDuration)
+        {
+            cam.transform.position = Vector3.Lerp(startPosition, tagetCameraPosition, elapsedTime / transitionDuration);
+            cam.transform.rotation = Quaternion.Slerp(startRotation, tagetCameraRotation, elapsedTime / transitionDuration);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure the final position and rotation are set
+        cam.transform.position = tagetCameraPosition;
+        cam.transform.rotation = tagetCameraRotation;
     }
 
     // Update is called once per frame
