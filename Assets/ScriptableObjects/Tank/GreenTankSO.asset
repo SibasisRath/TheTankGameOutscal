@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tankType: 0
   tankColor: {fileID: 2100000, guid: c39933e60e73205419d1f79a2af1fdac, type: 2}
+  tankHealth: 500
   tankSpeed: 20
   tankRotation: 70
-  tankFireType: 0
-  tankFireRate: 0
+  tankAmmunitionType: 2
+  tankShootingBehavior: {fileID: 11400000, guid: 139491b7ef0a0144eaf64eecae04d816,
+    type: 2}
+  fireCoolDown: 3

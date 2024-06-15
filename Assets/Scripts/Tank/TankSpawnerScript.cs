@@ -15,11 +15,9 @@ public class TankSpawnerScript : MonoBehaviour
         {
             if (tankType == tank.TankType)
             {
-                TankModel tankModel = new TankModel(tank.TankSpeed, tank.TankRotation, tank.TankType, tank.TankColor);
+                TankModel tankModel = new TankModel(tank.TankSpeed, tank.TankRotation, tank.TankType, tank.TankColor, tank.FireCoolDown, tank.TankAmmunitionType, tank.TankShootingBehavior);
                 TankController tankController = new TankController(tankModel, tankView);
             }
         }
     }
-
-    //public List<TankSO> GetListOfTanks(){return tanks;}
 }

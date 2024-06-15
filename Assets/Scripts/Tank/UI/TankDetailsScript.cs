@@ -8,8 +8,9 @@ public class TankDetailsScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI tankType;
     [SerializeField] TextMeshProUGUI tankSpeed;
     [SerializeField] TextMeshProUGUI tankRotation;
-    [SerializeField] TextMeshProUGUI tankFireType;
-    [SerializeField] TextMeshProUGUI tankFireRate;
+    [SerializeField] TextMeshProUGUI tankHealth;
+    [SerializeField] TextMeshProUGUI tankAmmunitionType;
+    [SerializeField] TextMeshProUGUI tankFireCoolDown;
 
     [SerializeField] List<TankSO> tankSOs;
 
@@ -29,7 +30,8 @@ public class TankDetailsScript : MonoBehaviour
         tankType.text = "Type: " + tank.TankType.ToString();
         tankSpeed.text = "Speed: " + tank.TankSpeed.ToString();
         tankRotation.text = "Rotation: " + tank.TankRotation.ToString();
-        tankFireType.text = "Fire Type: " + tank.TankFireType.ToString();
-        tankFireRate.text = "Fire Rate: " + tank.TankFireRate.ToString();
+        tankHealth.text = "Health: " + tank.TankHealth.ToString();
+        tankAmmunitionType.text = "Ammunition Type: " + tank.TankAmmunitionType.ToString();
+        tankFireCoolDown.text = "Fire Cooldown: (in sec) " + tank.FireCoolDown.ToString();
     }
 }

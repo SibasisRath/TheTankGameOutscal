@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,9 +7,13 @@ using UnityEngine;
 public class TankView : MonoBehaviour
 {
     private TankController tankController;
+    private TankModel tankModel;
 
     private float movement;
     private float rotation;
+
+    private bool isReadyToFire;
+    public event Action OnFire;
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private MeshRenderer[] children;
@@ -17,10 +22,18 @@ public class TankView : MonoBehaviour
     private Quaternion tagetCameraRotation;
     private const float transitionDuration = 2f;
 
+    public bool IsReadyToFire { get => isReadyToFire; set => isReadyToFire = value; }
+
+    private void Awake()
+    {
+        IsReadyToFire = true;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(LerpCameraPositionAndRotation());
+        tankModel = tankController.GetTankModel();
     }
 
     IEnumerator LerpCameraPositionAndRotation()
@@ -36,16 +49,16 @@ public class TankView : MonoBehaviour
 
         while (elapsedTime < transitionDuration)
         {
-            cam.transform.position = Vector3.Lerp(startPosition, tagetCameraPosition, elapsedTime / transitionDuration);
-            cam.transform.rotation = Quaternion.Slerp(startRotation, tagetCameraRotation, elapsedTime / transitionDuration);
+            cam.transform.SetPositionAndRotation(
+                Vector3.Lerp(startPosition, tagetCameraPosition, elapsedTime / transitionDuration),
+                Quaternion.Slerp(startRotation, tagetCameraRotation, elapsedTime / transitionDuration));
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         // Ensure the final position and rotation are set
-        cam.transform.position = tagetCameraPosition;
-        cam.transform.rotation = tagetCameraRotation;
+        cam.transform.SetPositionAndRotation(tagetCameraPosition, tagetCameraRotation);
     }
 
     // Update is called once per frame
@@ -54,15 +67,17 @@ public class TankView : MonoBehaviour
         Movement();
         if (movement != 0)
         {
-            tankController.Move(movement, tankController.GetTankModel().movementSpeed);
+            tankController.Move(movement, tankModel.movementSpeed);
         }
 
         if (rotation != 0)
         {
-            tankController.Rotate(rotation, tankController.GetTankModel().rotationSpeed);
+            tankController.Rotate(rotation, tankModel.rotationSpeed);
         }
-    }
+        OnFire?.Invoke();
 
+        //tankModel.shootingBehavior.Shoot(this);
+    }
     private void Movement()
     {
         movement = Input.GetAxis("Vertical");
@@ -85,5 +100,10 @@ public class TankView : MonoBehaviour
         {
             child.material = color;
         }
+    }
+
+    private void OnDestroy()
+    {
+        tankController?.Unsubscribe();
     }
 }

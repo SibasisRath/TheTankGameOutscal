@@ -7,19 +7,19 @@ public class TankSelection : MonoBehaviour
     [SerializeField] private TankSpawnerScript TankSpawnerScript;
     public void OnBlueTankSelected()
     {
-        TankSpawnerScript.CreateTank(TankTypes.BlueTank);
+        TankSpawnerScript.CreateTank(TankTypes.Blue_Tank);
         this.gameObject.SetActive(false);
     }
 
     public void OnGreenTankSelected()
     {
-        TankSpawnerScript.CreateTank(TankTypes.GreenTank);
+        TankSpawnerScript.CreateTank(TankTypes.Green_Tank);
         this.gameObject.SetActive(false);
     }
 
     public void OnRedTankSelected()
     {
-        TankSpawnerScript.CreateTank(TankTypes.RedTank);
+        TankSpawnerScript.CreateTank(TankTypes.Red_Tank);
         this.gameObject.SetActive(false);
     }
 }
