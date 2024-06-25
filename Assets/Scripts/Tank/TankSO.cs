@@ -16,8 +16,9 @@ public class TankSO : ScriptableObject
     [SerializeField] private float tankRotation;
 
     [Header("Ammunition")]
-    [SerializeField] private TankAmmunitionTypes tankAmmunitionType;
-    [SerializeField] private ShootingBehavior tankShootingBehavior;
+    [SerializeField] private AmmunitionType tankAmmunitionType;
+    [SerializeField] private BaseShootingBehavior shootingBehavior;
+    [SerializeField] private AmmunitionSO ammunitionSO;
     [SerializeField] private float fireCoolDown;
 
     public TankTypes TankType => tankType;
@@ -25,7 +26,8 @@ public class TankSO : ScriptableObject
     public int TankHealth => tankHealth;
     public float TankSpeed => tankSpeed;
     public float TankRotation => tankRotation;
-    public TankAmmunitionTypes TankAmmunitionType => tankAmmunitionType;
-    public ShootingBehavior TankShootingBehavior => tankShootingBehavior;
+    public AmmunitionType TankAmmunitionType => tankAmmunitionType;
+    public BaseShootingBehavior ShootingBehavior => shootingBehavior;
+    public AmmunitionSO AmmunitionSO => ammunitionSO;
     public float FireCoolDown => fireCoolDown;
 }

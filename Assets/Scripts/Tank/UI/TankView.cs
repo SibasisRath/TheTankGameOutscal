@@ -1,39 +1,39 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using TMPro;
 using UnityEngine;
 
 public class TankView : MonoBehaviour
 {
     private TankController tankController;
-    private TankModel tankModel;
 
     private float movement;
     private float rotation;
 
-    private bool isReadyToFire;
+    private bool isReadyToFire = true;
     public event Action OnFire;
+    public event Action OnSelectingTarget;
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private MeshRenderer[] children;
+    [SerializeField] private Transform fireTransform;
+
+    public Transform GetFireTransform() {  return fireTransform; }
 
     private Vector3 tagetCameraPosition;
     private Quaternion tagetCameraRotation;
     private const float transitionDuration = 2f;
 
-    public bool IsReadyToFire { get => isReadyToFire; set => isReadyToFire = value; }
+    private bool canPlayNow = false;
 
-    private void Awake()
-    {
-        IsReadyToFire = true;
-    }
+    public bool IsReadyToFire { get => isReadyToFire; set => isReadyToFire = value; }
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(LerpCameraPositionAndRotation());
-        tankModel = tankController.GetTankModel();
     }
 
     IEnumerator LerpCameraPositionAndRotation()
@@ -59,25 +59,45 @@ public class TankView : MonoBehaviour
 
         // Ensure the final position and rotation are set
         cam.transform.SetPositionAndRotation(tagetCameraPosition, tagetCameraRotation);
+        canPlayNow = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Movement();
-        if (movement != 0)
+        if (canPlayNow)
         {
-            tankController.Move(movement, tankModel.movementSpeed);
-        }
+            Movement();
+            SelectingTarget();
+            HandelFire();
+            if (movement != 0)
+            {
+                tankController.Move(movement);
+            }
 
-        if (rotation != 0)
-        {
-            tankController.Rotate(rotation, tankModel.rotationSpeed);
+            if (rotation != 0)
+            {
+                tankController.Rotate(rotation);
+            }
         }
-        OnFire?.Invoke();
-
-        //tankModel.shootingBehavior.Shoot(this);
     }
+
+    private void SelectingTarget()
+    {
+        if (Input.GetMouseButtonDown(1) && tankController.GetTankModel().types == TankTypes.Blue_Tank)
+        {
+            OnSelectingTarget?.Invoke();
+        }
+    }
+
+    private void HandelFire()
+    {
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0) || Input.GetMouseButtonUp(0))
+        {
+            OnFire?.Invoke();
+        }
+    }
+
     private void Movement()
     {
         movement = Input.GetAxis("Vertical");

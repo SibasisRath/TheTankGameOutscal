@@ -1,71 +1,119 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TankController
 {
-    private TankModel tankModel;
-    private TankView tankView;
+    private readonly TankModel tankModel;
+    private readonly TankView tankView;
 
+    private readonly Rigidbody rb;
 
-    private Rigidbody rb;
+   // private AmmunitionController ammunitionController;
+    private readonly AmmunitionSpawner ammunitionSpawner;
 
-    public TankController( TankModel tankModel, TankView tankView)
+    private EnemyView enemyView = null;
+    private float selectedRange = 0f;
+
+    public TankController(TankModel tankModel, TankView tankPrefab, AmmunitionSpawner ammunitionSpawner)
     {
         this.tankModel = tankModel;
-        this.tankView = GameObject.Instantiate<TankView>(tankView);
+        this.tankView = GameObject.Instantiate(tankPrefab);
         rb = this.tankView.GetRigidbody();
-        tankModel.SetTankController(this);
+
         this.tankView.SetTankController(this);
-        this.tankView.ChangeMaterials(this.tankModel.color);
+        this.tankView.ChangeMaterials(tankModel.color);
+
+        this.ammunitionSpawner = ammunitionSpawner;
 
         this.tankView.OnFire += HandleFire;
+        this.tankView.OnSelectingTarget += GetTargetPosition;
+        
     }
 
-    public void Move(float movement, float movementSpeed)
+    public void Move(float movement)
     {
-        rb.velocity = tankView.transform.forward * (movement * movementSpeed);
+        rb.velocity = tankView.transform.forward * (movement * tankModel.movementSpeed);
     }
 
-    public void Rotate(float rotation, float rotationSpeed) {
-        Vector3 vector3 = new Vector3(0f, rotation * rotationSpeed, 0f);
+    public void Rotate(float rotation)
+    {
+        Vector3 vector3 = new Vector3(0f, rotation * tankModel.rotationSpeed, 0f);
         Quaternion deltaRotation = Quaternion.Euler(vector3 * Time.deltaTime);
         rb.MoveRotation(rb.rotation * deltaRotation);
     }
 
-    private void HandleFire()
+    private void GetTargetPosition()
     {
-        //Debug.Log("HandleFire called. IsReadyToFire: " + tankView.IsReadyToFire);
-        if (tankView.IsReadyToFire)
-        {
-            //Debug.Log("Firing!");
-            Fire();
-        }
+        enemyView = tankModel.shootingBehavior.SelectTarget();
     }
 
-    private void Fire()
+    private void HandleFire()
     {
-        //Debug.Log("Fire method called.");
-        if (tankModel.shootingBehavior.Shoot(tankView)) 
+        HandleAmmunitionFire();       
+    }
+
+    public void HandleAmmunitionFire()
+    {
+        bool res = false;
+        switch (tankModel.ammunitionType)
         {
-            tankView.IsReadyToFire = false;
-            tankView.StartCoroutine(FireCooldownCoroutine());
+            case AmmunitionType.Guided_Missiles:
+                if ( enemyView != null && tankView.IsReadyToFire)
+                {
+                    Debug.Log("shoot");
+                    tankModel.ammunitionSO.SetSelectedEnemy(enemyView);
+                    GuidedMissilesController guidedMissilesController = (GuidedMissilesController)ammunitionSpawner.SpawnAmmunition(tankModel.ammunitionSO, tankView.GetFireTransform().position, tankView.GetFireTransform().rotation);
+                    guidedMissilesController.Fire();
+                    tankView.StartCoroutine(FireCooldownCoroutine());
+                }
+                break;
+
+            case AmmunitionType.Armour_Piercing_Rounds:
+                res = tankModel.shootingBehavior.Shoot(out selectedRange);
+                Debug.Log(res);
+                if (res && tankView.IsReadyToFire)
+                {
+                    tankModel.ammunitionSO.damageMultiplier = selectedRange;
+                    ArmourPiercingRoundsController armourPiercingRoundsController = (ArmourPiercingRoundsController)ammunitionSpawner.SpawnAmmunition(tankModel.ammunitionSO, tankView.GetFireTransform().position, tankView.GetFireTransform().rotation);
+                    armourPiercingRoundsController.Fire();
+                    tankView.StartCoroutine(FireCooldownCoroutine());
+                }
+                break;
+            case AmmunitionType.Highly_Explosive_Rounds:
+                res = tankModel.shootingBehavior.Shoot(out selectedRange);
+                if (res && tankView.IsReadyToFire)
+                {
+                    tankModel.ammunitionSO.explosionRadiousMultiplier = selectedRange;
+                    HighlyExplosiveRoundsController highlyExplosiveRoundsController = (HighlyExplosiveRoundsController)ammunitionSpawner.SpawnAmmunition(tankModel.ammunitionSO, tankView.GetFireTransform().position, tankView.GetFireTransform().rotation);
+                    highlyExplosiveRoundsController.Fire();
+                    tankView.StartCoroutine(FireCooldownCoroutine());
+                }
+                break;
+
+            default:
+                Debug.LogError("Unknown ammunition type!");
+                break;
         }
-        return;
-        
     }
 
     private IEnumerator FireCooldownCoroutine()
     {
-        //Debug.Log("Starting cooldown coroutine. IsReadyToFire: " + tankView.IsReadyToFire);
-        yield return new WaitForSeconds(tankModel.fireCoolDown);
-        tankView.IsReadyToFire = true;
-        //Debug.Log("Cooldown ended. IsReadyToFire: " + tankView.IsReadyToFire);
-    }
+        tankView.IsReadyToFire = false;
 
-    public TankModel GetTankModel() { return tankModel; }
+        yield return new WaitForSeconds(tankModel.fireCoolDown);
+
+        tankView.IsReadyToFire = true;
+    }
 
     public void Unsubscribe()
     {
         this.tankView.OnFire -= HandleFire;
+    }
+
+    internal TankModel GetTankModel()
+    {
+        return tankModel;
     }
 }

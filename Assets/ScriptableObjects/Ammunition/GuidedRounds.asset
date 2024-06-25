@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5adfd64695c5bf64f853dabcf09f821e, type: 3}
+  m_Name: GuidedRounds
+  m_EditorClassIdentifier: 
+  ammunitionType: 3
+  prefab: {fileID: 3655338979167002952, guid: ae894c5d050147345876b8e06e9be967, type: 3}
+  baseDamage: 100
+  damageMultiplier: 0
+  baseExplosionRadious: 0
+  explosionRadiousMultiplier: 0
+  movementSpeed: 30
+  lifeSpan: 0
+  fireSound: {fileID: 0}
+  explosionSound: {fileID: 0}
+  trailRenderer: {fileID: 0}
+  fireEffect: {fileID: 0}
+  explosionEffect: {fileID: 0}

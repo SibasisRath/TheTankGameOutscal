@@ -10,19 +10,21 @@ public class TankModel
     public TankTypes types;
     public Material color;
 
-    public TankAmmunitionTypes typesAmmunitionType;
-    public ShootingBehavior shootingBehavior;
+    public AmmunitionType ammunitionType;
+    public BaseShootingBehavior shootingBehavior;
+    public AmmunitionSO ammunitionSO;
     public float fireCoolDown;
 
-    public TankModel(float movementSpeed, float rotationSpeed, TankTypes types, Material color, float fireCoolDown, TankAmmunitionTypes typesAmmunitionType, ShootingBehavior shootingBehavior)
+    public TankModel(TankSO tankSO)
     {
-        this.movementSpeed = movementSpeed;
-        this.rotationSpeed = rotationSpeed;
-        this.types = types;
-        this.color = color;
-        this.fireCoolDown = fireCoolDown;
-        this.typesAmmunitionType = typesAmmunitionType;
-        this.shootingBehavior = shootingBehavior;
+        this.movementSpeed = tankSO.TankSpeed;
+        this.rotationSpeed = tankSO.TankRotation;
+        this.types = tankSO.TankType;
+        this.color = tankSO.TankColor;
+        this.ammunitionType = tankSO.TankAmmunitionType;
+        this.shootingBehavior = tankSO.ShootingBehavior;
+        this.ammunitionSO = tankSO.AmmunitionSO;
+        this.fireCoolDown = tankSO.FireCoolDown;
     }
 
     public void SetTankController(TankController tankController)

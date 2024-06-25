@@ -32,6 +32,6 @@ public class TankDetailsScript : MonoBehaviour
         tankRotation.text = "Rotation: " + tank.TankRotation.ToString();
         tankHealth.text = "Health: " + tank.TankHealth.ToString();
         tankAmmunitionType.text = "Ammunition Type: " + tank.TankAmmunitionType.ToString();
-        tankFireCoolDown.text = "Fire Cooldown: (in sec) " + tank.FireCoolDown.ToString();
+        //tankFireCoolDown.text = "Fire Cooldown: (in sec) " + tank.FireCoolDown.ToString();
     }
 }

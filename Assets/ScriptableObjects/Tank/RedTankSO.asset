@@ -18,6 +18,6 @@ MonoBehaviour:
   tankSpeed: 30
   tankRotation: 50
   tankAmmunitionType: 1
-  tankShootingBehavior: {fileID: 11400000, guid: 3ba414174f0f3974db48eb59b3e82dd4,
-    type: 2}
+  shootingBehavior: {fileID: 11400000, guid: 72e475998bd8eb84cb14ba6aff02e002, type: 2}
+  ammunitionSO: {fileID: 11400000, guid: 6a4d36f5370ea6e4282fdc842c7f24ea, type: 2}
   fireCoolDown: 1

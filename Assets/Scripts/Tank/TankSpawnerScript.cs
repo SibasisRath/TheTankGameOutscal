@@ -9,14 +9,16 @@ public class TankSpawnerScript : MonoBehaviour
 
     [SerializeField] private TankView tankView;
 
+    public AmmunitionSpawner ammunitionSpawner;
+
     public void CreateTank(TankTypes tankType)
     {
         foreach (TankSO tank in tanks) 
         {
             if (tankType == tank.TankType)
             {
-                TankModel tankModel = new TankModel(tank.TankSpeed, tank.TankRotation, tank.TankType, tank.TankColor, tank.FireCoolDown, tank.TankAmmunitionType, tank.TankShootingBehavior);
-                TankController tankController = new TankController(tankModel, tankView);
+                TankModel tankModel = new TankModel(tank);
+                TankController tankController = new TankController(tankModel, tankView, ammunitionSpawner);
             }
         }
     }
